@@ -39,4 +39,10 @@ public class Sit {
     @ManyToOne(targetEntity = Hall.class, fetch = FetchType.LAZY)
     private Hall hall;
 
+    public Sit(Integer row, Integer place, SitType type, Hall hall) {
+        this.row = row;
+        this.place = place;
+        this.type = type;
+        this.hall = hall;
+    }
 }

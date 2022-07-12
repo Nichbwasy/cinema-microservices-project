@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -49,4 +50,12 @@ public class Hall {
     )
     private List<Sit> sits;
 
+    public Hall(String name, String description, Integer rows, Integer placesInRow) {
+        this.name = name;
+        this.description = description;
+        this.rows = rows;
+        this.placesInRow = placesInRow;
+        this.size = rows * placesInRow;
+        this.sits = new ArrayList<>();
+    }
 }

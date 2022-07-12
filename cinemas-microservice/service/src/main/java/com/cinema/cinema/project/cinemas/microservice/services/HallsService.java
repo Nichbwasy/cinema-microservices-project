@@ -9,7 +9,7 @@ import java.util.List;
 public interface HallsService {
     List<HallDto> getAllHallsInCinema(Long cinemaId);
     HallDto getHall(Long id);
-    HallDto createHall(Hall hall);
+    HallDto createHall(Long sitsTypeId, Hall hall);
     HallDto updateHall(Hall hall);
     Long deleteHall(Long id);
     List<Long> deleteAllHallsFromCinema(Long cinemaId);

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -19,6 +21,13 @@ public class SitsTypeServiceImpl implements SitsTypesService {
 
     @Autowired
     private SitsTypesRepository sitsTypesRepository;
+
+    @Override
+    public List<SitTypeDto> getAllSitsTypes() {
+        List<SitType> sitTypes = sitsTypesRepository.findAll();
+        log.info("{} sit types has been found.", sitTypes.size());
+        return sitTypes.stream().map(SitTypeMapper.INSTANCE::mapToDto).collect(Collectors.toList());
+    }
 
     @Override
     public SitTypeDto getSitType(Long id) {

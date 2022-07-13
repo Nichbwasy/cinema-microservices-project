@@ -56,13 +56,19 @@ public class HallsServiceImpl implements HallsService {
     }
 
     @Override
-    public HallDto getHall(Long id) {
-        if (hallsRepository.existsById(id)) {
-            log.info("Hall with id '{}' has been found.", id);
-            return HallMapper.INSTANCE.mapToDto(hallsRepository.getReferenceById(id));
+    public HallDto getCinemaHall(Long cinemaId, Long hallId) {
+        if (cinemasRepository.existsById(cinemaId)) {
+            Cinema cinema = cinemasRepository.getReferenceById(cinemaId);
+            if (cinema.getHalls().stream().anyMatch(hall -> hall.getId().equals(hallId))) {
+                log.info("Hall with id '{}' has been found.", hallId);
+                return HallMapper.INSTANCE.mapToDto(hallsRepository.getReferenceById(hallId));
+            } else {
+                log.warn("Hall with id '{}' doesn't belong to the cinema with id '{}' or not found!", hallId, cinemaId);
+                throw new HallNotFoundException(String.format("Hall with id '%d' doesn't belong to the cinema with id '%d' or not found!", hallId, cinemaId));
+            }
         } else {
-            log.warn("Hall with id '{}' not found!", id);
-            throw new CinemaNotFoundException(String.format("Hall with id '%d' not found!", id));
+            log.warn("Cinema with id '{}' not found!", cinemaId);
+            throw new CinemaNotFoundException(String.format("Cinema with id '%d' not found!", cinemaId));
         }
     }
 
@@ -100,19 +106,25 @@ public class HallsServiceImpl implements HallsService {
     }
 
     @Override
-    public Long deleteHall(Long id) {
-        if (hallsRepository.existsById(id)) {
-            try {
-                hallsRepository.deleteById(id);
-                log.info("Hall with id '{}' has been deleted.", id);
-                return id;
-            } catch (Exception e) {
-                log.error("Error was occurred while deleting a hall! " + e.getMessage());
-                throw new HallDeletingException("Error was occurred while deleting a hall! " + e.getMessage());
+    public Long deleteHallFromCinema(Long cinemaId, Long hallId) {
+        if (cinemasRepository.existsById(cinemaId)) {
+            Cinema cinema = cinemasRepository.getReferenceById(cinemaId);
+            if (cinema.getHalls().stream().anyMatch(hall -> hall.getId().equals(hallId))) {
+                try {
+                    hallsRepository.deleteById(hallId);
+                    log.info("Hall with id '{}' has been deleted.", hallId);
+                    return hallId;
+                } catch (Exception e) {
+                    log.error("Error was occurred while deleting a hall! " + e.getMessage());
+                    throw new HallDeletingException("Error was occurred while deleting a hall! " + e.getMessage());
+                }
+            } else {
+                log.warn("Hall with id '{}' doesn't belong to the cinema with id '{}' or not found!", hallId, cinemaId);
+                throw new HallNotFoundException(String.format("Hall with id '%d' doesn't belong to the cinema with id '%d' or not found!", hallId, cinemaId));
             }
         } else {
-            log.warn("Hall with id '{}' not found!", id);
-            throw new HallNotFoundException(String.format("Hall with id '%d' not found!", id));
+            log.warn("Cinema with id '{}' not found!", cinemaId);
+            throw new CinemaNotFoundException(String.format("Cinema with id '%d' not found!", cinemaId));
         }
     }
 

@@ -2,16 +2,21 @@ package com.cinema.cinema.project.cinemas.microservice.services;
 
 import com.cinema.cinema.project.cinemas.microservice.domains.HallDto;
 import com.cinema.cinema.project.cinemas.microservice.domains.SitDto;
+import com.cinema.cinema.project.cinemas.microservice.exceptions.services.cinemas.CinemaNotFoundException;
+import com.cinema.cinema.project.cinemas.microservice.exceptions.services.halls.HallCreationException;
+import com.cinema.cinema.project.cinemas.microservice.exceptions.services.halls.HallDeletingException;
+import com.cinema.cinema.project.cinemas.microservice.exceptions.services.halls.HallNotFoundException;
+import com.cinema.cinema.project.cinemas.microservice.exceptions.services.sits.SitDeletingException;
 import com.cinema.cinema.project.cinemas.microservice.models.Hall;
 
 import java.util.List;
 
 public interface HallsService {
-    List<HallDto> getAllHallsInCinema(Long cinemaId);
-    HallDto getHall(Long id);
-    HallDto createHall(Long sitsTypeId, Hall hall);
-    HallDto updateHall(Hall hall);
-    Long deleteHall(Long id);
-    List<Long> deleteAllHallsFromCinema(Long cinemaId);
-    List<SitDto> getAllSitsInHall(Long hallId);
+    List<HallDto> getAllHallsInCinema(Long cinemaId) throws CinemaNotFoundException;
+    HallDto getCinemaHall(Long cinemaId, Long hallId) throws CinemaNotFoundException, HallNotFoundException;
+    HallDto createHall(Long sitsTypeId, Hall hall) throws HallCreationException;
+    HallDto updateHall(Hall hall) throws HallNotFoundException, HallCreationException;
+    Long deleteHallFromCinema(Long cinemaId, Long hallId) throws HallNotFoundException, HallDeletingException;
+    List<Long> deleteAllHallsFromCinema(Long cinemaId) throws CinemaNotFoundException, HallDeletingException;
+    List<SitDto> getAllSitsInHall(Long hallId) throws HallNotFoundException, SitDeletingException;
 }

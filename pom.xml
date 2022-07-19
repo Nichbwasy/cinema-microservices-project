@@ -9,6 +9,8 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>cinemas-microservice</module>
+        <module>server-microservice</module>
+        <module>films-microservice</module>
     </modules>
     <packaging>pom</packaging>
 

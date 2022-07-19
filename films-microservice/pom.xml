@@ -8,26 +8,25 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.cinema.cinema-project.cinemas-microservice</groupId>
-    <artifactId>cinemas-microservice</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <modules>
         <module>model</module>
         <module>domain</module>
         <module>dao</module>
         <module>service</module>
         <module>exception</module>
-        <module>controller</module>
-        <module>run</module>
     </modules>
-    <packaging>pom</packaging>
+
+    <groupId>com.cinema.cinema-project.films-microservice</groupId>
+    <artifactId>films-microservice</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <spring-cloud.version>2021.0.1</spring-cloud.version>
     </properties>
+
 
     <dependencies>
         <!-- EUREKA CLIENT -->
@@ -55,8 +54,7 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
+            <groupId>org.springframework.boot</groupId>            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
         <!-- POSTGRES -->

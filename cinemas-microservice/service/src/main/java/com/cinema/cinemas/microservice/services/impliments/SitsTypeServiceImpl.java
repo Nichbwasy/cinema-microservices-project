@@ -72,7 +72,7 @@ public class SitsTypeServiceImpl implements SitsTypesService {
             }
         } else {
             log.warn("Can't update sit type! Sit type with id '{}' not exists!", sit.getId());
-            throw new SitTypeAlreadyExistException(
+            throw new SitTypeNotFoundException(
                     String.format("Can't update sit type! Sit type with id '%d' not exists!", sit.getId()));
         }
     }

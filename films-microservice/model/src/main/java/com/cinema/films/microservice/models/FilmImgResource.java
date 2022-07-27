@@ -21,8 +21,8 @@ public class FilmImgResource {
     private Long id;
 
     @NotNull(message = "File name can't be null!")
-    @Size(min = 32, max = 32, message = "File name must contain 32 characters!")
-    @Column(name = "fileName", length = 32, nullable = false, unique = true)
+    @Size(min = 32, max = 38, message = "File name must contain at least 32 characters!")
+    @Column(name = "fileName", length = 38, nullable = false, unique = true)
     private String fileName;
 
     @NotNull(message = "File extension can't be null!")

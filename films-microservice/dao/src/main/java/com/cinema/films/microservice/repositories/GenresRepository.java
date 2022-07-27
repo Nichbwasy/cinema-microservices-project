@@ -4,4 +4,5 @@ import com.cinema.films.microservice.models.Genre;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GenresRepository extends JpaRepository<Genre, Long> {
+    Boolean existsByName(String name);
 }

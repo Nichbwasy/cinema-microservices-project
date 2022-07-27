@@ -11,6 +11,8 @@
         <module>cinemas-microservice</module>
         <module>server-microservice</module>
         <module>films-microservice</module>
+        <module>common-utils</module>
+        <module>common-utils</module>
     </modules>
     <packaging>pom</packaging>
 

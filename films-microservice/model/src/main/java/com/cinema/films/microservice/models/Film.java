@@ -3,6 +3,7 @@ package com.cinema.films.microservice.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -31,7 +32,7 @@ public class Film {
 
     @NotNull(message = "Film year can't be null!")
     @Min(value = 1800, message = "Film year can't be lesser than 1800!")
-    @Column(name = "year", nullable = false, unique = true)
+    @Column(name = "year", nullable = false)
     private Integer year;
 
     @OneToOne(targetEntity = Genre.class, fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
@@ -40,6 +41,7 @@ public class Film {
     @OneToOne(targetEntity = Director.class, fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private Director director;
 
+    @ToString.Exclude
     @OneToOne(targetEntity = FilmImgResource.class, fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private FilmImgResource imgResource;
 }

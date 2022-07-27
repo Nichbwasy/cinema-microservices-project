@@ -4,4 +4,5 @@ import com.cinema.films.microservice.models.Film;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FilmsRepository extends JpaRepository<Film, Long> {
+    Boolean existsByName(String name);
 }

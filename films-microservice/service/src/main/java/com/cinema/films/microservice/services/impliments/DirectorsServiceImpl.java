@@ -67,7 +67,7 @@ public class DirectorsServiceImpl implements DirectorsService {
 
     @Override
     public DirectorDto updateDirector(Director director) throws DirectorNotFoundException, DirectorUpdatingException {
-        if (directorsRepository.existsByFirstNameAndLastName(director.getFirstName(), director.getLastName())) {
+        if (directorsRepository.existsById(director.getId())) {
             try {
                 Director updatedDirector = directorsRepository.save(director);
                 log.info("Director with id '{}' has been updated.", updatedDirector.getId());

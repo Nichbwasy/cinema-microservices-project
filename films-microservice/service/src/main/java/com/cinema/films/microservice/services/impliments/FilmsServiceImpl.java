@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Date;
@@ -52,7 +53,7 @@ public class FilmsServiceImpl implements FilmsService {
     private ResourcesStorage resourcesStorage;
 
     @Value("${films.page.size}")
-    private static Integer FILMS_PAGE_SIZE;
+    private Integer FILMS_PAGE_SIZE;
 
     @Override
     public List<FilmDto> getAllFilms() {
@@ -81,7 +82,7 @@ public class FilmsServiceImpl implements FilmsService {
     }
 
     @Override
-    public FilmDto saveFilm(Film film, MultipartFile imgFile) {
+    public FilmDto saveFilm(@Valid Film film, MultipartFile imgFile) {
         if (!filmsRepository.existsByName(film.getName())) {
             try {
                 FilmImgResource filmImgResource = saveImg(imgFile);
@@ -100,7 +101,7 @@ public class FilmsServiceImpl implements FilmsService {
     }
 
     @Override
-    public FilmDto updateFilm(Film film, MultipartFile imgFile) {
+    public FilmDto updateFilm(@Valid Film film, MultipartFile imgFile) {
         if (filmsRepository.existsById(film.getId())) {
             if (!filmsRepository.existsByName(film.getName())) {
                 try {

@@ -1,8 +1,17 @@
 package com.cinema.films.microservice.controllers;
 
+import com.cinema.films.microservice.controllers.dtos.FilmFormDto;
+import com.cinema.films.microservice.domains.DirectorDto;
 import com.cinema.films.microservice.domains.FilmDto;
+import com.cinema.films.microservice.domains.FilmImgResourceDto;
+import com.cinema.films.microservice.domains.GenreDto;
+import com.cinema.films.microservice.models.Director;
 import com.cinema.films.microservice.models.Film;
+import com.cinema.films.microservice.services.DirectorsService;
 import com.cinema.films.microservice.services.FilmsService;
+import com.cinema.films.microservice.services.GenresService;
+import com.cinema.films.microservice.services.mappers.DirectorMapper;
+import com.cinema.films.microservice.services.mappers.GenreMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +25,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/films")
 public class FilmsController {
+
+    @Autowired
+    private DirectorsService directorsService;
+
+    @Autowired
+    private GenresService genresService;
 
     @Autowired
     private FilmsService filmsService;
@@ -41,15 +56,46 @@ public class FilmsController {
         return ResponseEntity.ok().body(films);
     }
 
+    @GetMapping("/{id}/poster")
+    public ResponseEntity<FilmImgResourceDto> getFilmImgMetadata(@PathVariable Long id) {
+        FilmImgResourceDto imgResourceDto = filmsService.getFilmMetadata(id);
+        log.info("Img resources for the film with id '{}' have been returned: {}", id, imgResourceDto);
+        return ResponseEntity.ok().body(imgResourceDto);
+    }
+
+
     @PostMapping
-    public ResponseEntity<Long> createFilm(@ModelAttribute @Valid Film film, @ModelAttribute MultipartFile img) {
+    public ResponseEntity<Long> createFilm(@ModelAttribute FilmFormDto filmFormDto, @ModelAttribute MultipartFile img) {
+        DirectorDto director = directorsService.getDirector(filmFormDto.getDirectorId());
+        GenreDto genre = genresService.getGenre(filmFormDto.getGenreId());
+
+        Film film = new Film(
+                filmFormDto.getName(),
+                filmFormDto.getDescription(),
+                filmFormDto.getYear(),
+                GenreMapper.INSTANCE.mapToModel(genre),
+                DirectorMapper.INSTANCE.mapToModel(director)
+        );
+
         FilmDto filmDto = filmsService.saveFilm(film, img);
         log.info("New film has been created: {}", filmDto);
         return ResponseEntity.ok().body(filmDto.getId());
     }
 
     @PutMapping
-    public ResponseEntity<Long> update(@ModelAttribute @Valid Film film, @ModelAttribute MultipartFile img) {
+    public ResponseEntity<Long> update(@ModelAttribute FilmFormDto filmFormDto, @ModelAttribute MultipartFile img) {
+        DirectorDto director = directorsService.getDirector(filmFormDto.getDirectorId());
+        GenreDto genre = genresService.getGenre(filmFormDto.getGenreId());
+
+        Film film = new Film(
+                filmFormDto.getId(),
+                filmFormDto.getName(),
+                filmFormDto.getDescription(),
+                filmFormDto.getYear(),
+                GenreMapper.INSTANCE.mapToModel(genre),
+                DirectorMapper.INSTANCE.mapToModel(director)
+        );
+
         FilmDto filmDto = filmsService.updateFilm(film, img);
         log.info("Film has been updated: {}", filmDto);
         return ResponseEntity.ok().body(filmDto.getId());

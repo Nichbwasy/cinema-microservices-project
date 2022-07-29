@@ -10,6 +10,7 @@ public interface GenreMapper {
 
     GenreMapper INSTANCE = Mappers.getMapper(GenreMapper.class);
 
+    Genre mapToModel(GenreDto genre);
     GenreDto mapToDto (Genre genre);
 
 }

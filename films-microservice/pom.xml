@@ -17,6 +17,7 @@
         <module>exception</module>
         <module>run</module>
         <module>controller</module>
+        <module>client</module>
     </modules>
 
     <groupId>com.cinema.cinema-project.films-microservice</groupId>

@@ -10,6 +10,7 @@ public interface DirectorMapper {
 
         DirectorMapper INSTANCE = Mappers.getMapper(DirectorMapper.class);
 
+        Director mapToModel(DirectorDto director);
         DirectorDto mapToDto(Director director);
 
 }

@@ -27,17 +27,17 @@ public class FilmImgResource {
 
     @NotNull(message = "File extension can't be null!")
     @Size(min = 3, message = "File extension must contain at least 3 characters!")
-    @Column(name = "fileExtension", length = 16, nullable = false, unique = true)
+    @Column(name = "fileExtension", length = 16, nullable = false)
     private String fileExtension;
 
     @NotNull(message = "File resolution can't be null!")
     @Min(value = 0, message = "File resolution on X axis can't be lesser than pixels!")
-    @Column(name = "resolutionX", nullable = false, unique = true)
+    @Column(name = "resolutionX", nullable = false)
     private Integer resolutionX;
 
     @NotNull(message = "File resolution can't be null!")
     @Min(value = 0, message = "File resolution on Y axis can't be lesser than pixels!")
-    @Column(name = "resolutionY", nullable = false, unique = true)
+    @Column(name = "resolutionY", nullable = false)
     private Integer resolutionY;
 
     @NotNull(message = "Image size can't be null!")

@@ -44,4 +44,21 @@ public class Film {
     @ToString.Exclude
     @OneToOne(targetEntity = FilmImgResource.class, fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private FilmImgResource imgResource;
+
+    public Film(Long id, String name, String description, Integer year, Genre genre, Director director) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.year = year;
+        this.genre = genre;
+        this.director = director;
+    }
+
+    public Film(String name, String description, Integer year, Genre genre, Director director) {
+        this.name = name;
+        this.description = description;
+        this.year = year;
+        this.genre = genre;
+        this.director = director;
+    }
 }

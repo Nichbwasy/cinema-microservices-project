@@ -2,7 +2,6 @@ package com.cinema.films.microservice.controllers.exceptions;
 
 import com.cinema.films.microservice.exceptions.dao.minio.MinIoException;
 import com.cinema.films.microservice.exceptions.services.*;
-import com.cinema.films.microservice.exceptions.dao.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

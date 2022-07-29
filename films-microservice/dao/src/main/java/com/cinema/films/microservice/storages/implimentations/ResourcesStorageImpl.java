@@ -6,14 +6,13 @@ import io.minio.*;
 import io.minio.errors.MinioException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @Slf4j
@@ -21,16 +20,16 @@ import java.util.Map;
 public class ResourcesStorageImpl implements ResourcesStorage {
 
     @Value("${storage.minio.endpoint}")
-    private static String ENDPOINT;
+    private String ENDPOINT = "http://127.0.0.1:9000";
 
     @Value("${storage.minio.keys.access}")
-    private static String ACCESS_KEY;
+    private String ACCESS_KEY = "user";
 
     @Value("${storage.minio.keys.secret}")
-    private static String SECRET_KEY;
+    private String SECRET_KEY = "password";
 
     @Value("${storage.minio.buckit.name}")
-    private static String BUCKET_NAME;
+    private String BUCKET_NAME = "cinema";
 
     private final MinioClient minioClient;
 

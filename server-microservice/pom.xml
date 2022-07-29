@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>run</module>
+        <module>client</module>
     </modules>
     <artifactId>server-microservice</artifactId>
 

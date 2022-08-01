@@ -13,6 +13,7 @@
         <module>films-microservice</module>
         <module>common-utils</module>
         <module>common-utils</module>
+        <module>afisha-microservice</module>
     </modules>
     <packaging>pom</packaging>
 

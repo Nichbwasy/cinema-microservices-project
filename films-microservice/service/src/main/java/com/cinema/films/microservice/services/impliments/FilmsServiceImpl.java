@@ -34,6 +34,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -140,6 +141,13 @@ public class FilmsServiceImpl implements FilmsService {
             log.warn("Film with id '{}' not found!", id);
             throw new FilmNotFoundException(String.format("Film with id '%d' not found!", id));
         }
+    }
+
+    @Override
+    public InputStream getFilmPoster(Long filmId) {
+        FilmImgResourceDto imgResourceDto = getFilmMetadata(filmId);
+        log.info("Resources for the film with id '{}' have been got.", filmId);
+        return resourcesStorage.getFileByName(imgResourceDto.getFileName());
     }
 
     @Override

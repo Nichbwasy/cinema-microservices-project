@@ -29,8 +29,11 @@ public class MovieSeanceSit {
     @Column(name = "status", length = 64, nullable = false)
     private String status;
 
-    @Min(value = 0, message = "Film id can't be negative!")
-    @NotNull(message = "Film id a movie seance is mandatory!")
-    @Column(name = "filId", nullable = false)
-    private Long filmId;
+
+    public MovieSeanceSit(Long sitId, String status) {
+        this.sitId = sitId;
+        this.status = status;
+    }
 }
+
+

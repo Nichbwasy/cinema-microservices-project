@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.InputStream;
 import java.util.List;
 
 @Slf4j
@@ -56,13 +57,19 @@ public class FilmsController {
         return ResponseEntity.ok().body(films);
     }
 
-    @GetMapping("/{id}/poster")
+    @GetMapping("/{id}/poster/metadata")
     public ResponseEntity<FilmImgResourceDto> getFilmImgMetadata(@PathVariable Long id) {
         FilmImgResourceDto imgResourceDto = filmsService.getFilmMetadata(id);
         log.info("Img resources for the film with id '{}' have been returned: {}", id, imgResourceDto);
         return ResponseEntity.ok().body(imgResourceDto);
     }
 
+    @GetMapping("/{id}/poster")
+    public ResponseEntity<InputStream> getFilmImg(@PathVariable Long id) {
+        InputStream poster = filmsService.getFilmPoster(id);
+        log.info("Poster for the film with id '{}' have been returned.", id);
+        return ResponseEntity.ok().body(poster);
+    }
 
     @PostMapping
     public ResponseEntity<Long> createFilm(@ModelAttribute FilmFormDto filmFormDto, @ModelAttribute MultipartFile img) {

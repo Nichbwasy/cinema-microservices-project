@@ -1,0 +1,32 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    discovery:
+      enabled: true
+    gateway:
+      routes:
+        - id: CINEMAS-MICROSERVICE
+          uri: ${CINEMAS_MICROSERVICE_GATEWAY_URI:http://localhost:8081}
+          predicates:
+            - Path=/cinemas/**, /sits/**
+        - id: FILMS-MICROSERVICE
+          uri: ${FILMS_MICROSERVICE_GATEWAY_URI:http://localhost:8082}
+          predicates:
+            - Path=/films/**
+        - id: AFISHA-MICROSERVICE
+          uri: ${AFISHA_MICROSERVICE_GATEWAY_URI:http://localhost:8083}
+          predicates:
+            - Path=/afisha/**
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://${EUREKA_SERVER_URL:localhost}:8761/eureka/
+  instance:
+    prefer-ip-address: true

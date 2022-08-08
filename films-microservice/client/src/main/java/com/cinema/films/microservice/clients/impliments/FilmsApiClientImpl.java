@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.InputStream;
+
 @Slf4j
 @Component
 public class FilmsApiClientImpl implements FilmsApiClient {
@@ -22,6 +24,19 @@ public class FilmsApiClientImpl implements FilmsApiClient {
         try {
             ResponseEntity<FilmDto> responseEntity = restTemplate.exchange(requestUri, HttpMethod.GET, null, FilmDto.class);
             log.info("Film has bent got from 'FILMS-MICROSERVICE' by id '{}'", id);
+            return responseEntity.getBody();
+        } catch (RestClientException e) {
+            log.error("Films rest client exception ! {}", e.getMessage());
+            throw new FilmsMicroserviceApiException(String.format("Films rest client exception ! %s", e.getMessage()));
+        }
+    }
+
+    @Override
+    public InputStream getFilmPoster(Long filmId) {
+        String requestUri = "http://FILMS-MICROSERVICE/films/" + filmId + "/poster";
+        try {
+            ResponseEntity<InputStream> responseEntity = restTemplate.exchange(requestUri, HttpMethod.GET, null, InputStream.class);
+            log.info("Film poster has been got from 'FILMS-MICROSERVICE' by id '{}'", filmId);
             return responseEntity.getBody();
         } catch (RestClientException e) {
             log.error("Films rest client exception ! {}", e.getMessage());

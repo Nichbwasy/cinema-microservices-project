@@ -17,6 +17,7 @@ import com.cinema.cinemas.microservice.domains.HallDto;
 import com.cinema.cinemas.microservice.exceptions.services.cinemas.CinemaNotFoundException;
 import com.cinema.cinemas.microservice.exceptions.services.halls.HallNotBelongCinemaException;
 import com.cinema.common.utils.contants.movie.seances.SitsStatuses;
+import com.cinema.common.utils.generators.StringGenerator;
 import com.cinema.films.microservice.clients.FilmsApiClient;
 import com.cinema.films.microservice.domains.FilmDto;
 import com.cinema.films.microservice.exceptions.services.films.FilmNotFoundException;
@@ -41,6 +42,9 @@ public class MovieSeancesServiceImpl implements MovieSeancesService {
     private MovieSeancesRepository movieSeancesRepository;
 
     @Autowired
+    private MovieSeanceSitsRepository movieSeanceSitsRepository;
+
+    @Autowired
     private CinemasApiClient cinemasApiClient;
 
     @Autowired
@@ -58,7 +62,7 @@ public class MovieSeancesServiceImpl implements MovieSeancesService {
         seances.forEach(movieSeance -> {
             SeanceDto seanceDto = new SeanceDto();
             try {
-                FilmDto filmDto = filmsApiClient.getFilm(movieSeance.getId());
+                FilmDto filmDto = filmsApiClient.getFilm(movieSeance.getFilmId());
                 HallDto hallDto = cinemasApiClient.getCinemaHall(movieSeance.getCinemaId(), movieSeance.getHallId());
                 InputStream poster = filmsApiClient.getFilmPoster(movieSeance.getFilmId());
 
@@ -81,7 +85,7 @@ public class MovieSeancesServiceImpl implements MovieSeancesService {
             MovieSeance movieSeance = movieSeancesRepository.getReferenceById(id);
             log.info("Movie seance with id '{}' has been found.", id);
             try {
-                FilmDto filmDto = filmsApiClient.getFilm(movieSeance.getId());
+                FilmDto filmDto = filmsApiClient.getFilm(movieSeance.getFilmId());
                 HallDto hallDto = cinemasApiClient.getCinemaHall(movieSeance.getCinemaId(), movieSeance.getHallId());
                 InputStream poster = filmsApiClient.getFilmPoster(movieSeance.getFilmId());
 
@@ -114,9 +118,12 @@ public class MovieSeancesServiceImpl implements MovieSeancesService {
                                 sitDto.getId(),
                                 SitsStatuses.AVAILABLE
                         );
+                        seanceSit = movieSeanceSitsRepository.save(seanceSit);
+
                         sits.add(seanceSit);
                     });
 
+                    movieSeance.setCode(StringGenerator.generateRandomString(16));
                     movieSeance.setSits(sits);
                     movieSeance = movieSeancesRepository.save(movieSeance);
                     log.info("New movie seance with id has been created");

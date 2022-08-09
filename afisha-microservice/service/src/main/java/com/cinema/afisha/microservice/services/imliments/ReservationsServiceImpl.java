@@ -1,6 +1,7 @@
 package com.cinema.afisha.microservice.services.imliments;
 
 import com.cinema.afisha.microservice.domains.ReservationDto;
+import com.cinema.afisha.microservice.exceptions.services.reservations.ReservationAlreadyExistException;
 import com.cinema.afisha.microservice.exceptions.services.reservations.ReservationCreationException;
 import com.cinema.afisha.microservice.exceptions.services.reservations.ReservationNotFoundException;
 import com.cinema.afisha.microservice.exceptions.services.reservations.ReservationUpdatingException;
@@ -71,24 +72,29 @@ public class ReservationsServiceImpl implements ReservationsService {
 
     @Override
     public ReservationDto createReservation(ReservationFormDto reservation) {
-        if (movieSeancesRepository.existsById(reservation.getId())) {
+        if (movieSeancesRepository.existsById(reservation.getMovieSeanceId())) {
             MovieSeance movieSeance = movieSeancesRepository.getReferenceById(reservation.getMovieSeanceId());
             if (movieSeance.getSits().stream().anyMatch(sit -> sit.getId().equals(reservation.getSitId()))) {
-                try {
-                    MovieSeanceSit movieSeanceSit = movieSeanceSitsRepository.getReferenceById(reservation.getSitId());
-                    Reservation createdReservation = new Reservation();
+                MovieSeanceSit movieSeanceSit = movieSeanceSitsRepository.getReferenceById(reservation.getSitId());
+                if (movieSeanceSit.getStatus().equals(SitsStatuses.AVAILABLE)) {
+                    try {
+                        Reservation createdReservation = new Reservation();
 
-                    movieSeanceSit.setStatus(SitsStatuses.OCCUPIED);
-                    createdReservation.setReservationTime(new Date());
-                    createdReservation.setMovieSeance(movieSeance);
-                    createdReservation.setSit(movieSeanceSit);
-                    createdReservation.setReserverEmail(reservation.getReserverEmail());
-                    createdReservation = reservationsRepository.save(createdReservation);
-                    log.info("New reservation with id '{}' has been created.", createdReservation.getId());
-                    return ReservationMapper.INSTANCE.mapToDto(createdReservation);
-                } catch (Exception e) {
-                    log.error("Can't create reservation! " + e.getMessage());
-                    throw new ReservationCreationException("Can't create reservation! " + e.getMessage());
+                        movieSeanceSit.setStatus(SitsStatuses.OCCUPIED);
+                        createdReservation.setReservationTime(new Date());
+                        createdReservation.setMovieSeance(movieSeance);
+                        createdReservation.setSit(movieSeanceSit);
+                        createdReservation.setReserverEmail(reservation.getReserverEmail());
+                        createdReservation = reservationsRepository.save(createdReservation);
+                        log.info("New reservation with id '{}' has been created.", createdReservation.getId());
+                        return ReservationMapper.INSTANCE.mapToDto(createdReservation);
+                    } catch (Exception e) {
+                        log.error("Can't create reservation! " + e.getMessage());
+                        throw new ReservationCreationException("Can't create reservation! " + e.getMessage());
+                    }
+                } else {
+                    log.warn("Can't reserve sit '{}'! Sit is unavailable!", movieSeanceSit);
+                    throw new ReservationAlreadyExistException(String.format("Can't reserve sit '%s'! Sit is unavailable!", movieSeanceSit));
                 }
             } else {
                 log.warn("Movie seance sit with id '{}' doesn't belong to the hall or not found!", reservation.getSitId());
@@ -102,7 +108,7 @@ public class ReservationsServiceImpl implements ReservationsService {
 
     @Override
     public ReservationDto updateReservation(ReservationFormDto reservation) {
-        if (reservationsRepository.existsById(reservation.getId())) {
+        if (reservationsRepository.existsById(reservation.getMovieSeanceId())) {
             Reservation savedReservation = reservationsRepository.getReferenceById(reservation.getId());
             if (movieSeancesRepository.existsById(reservation.getId())) {
                 MovieSeance movieSeance = movieSeancesRepository.getReferenceById(reservation.getMovieSeanceId());

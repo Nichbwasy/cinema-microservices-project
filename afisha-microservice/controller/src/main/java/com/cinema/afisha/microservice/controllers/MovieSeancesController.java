@@ -20,9 +20,9 @@ public class MovieSeancesController {
     @Autowired
     private MovieSeancesService movieSeancesService;
 
-    @GetMapping("/page")
+    @GetMapping("/{page}")
     public ResponseEntity<List<SeanceDto>> getSeancesPage(@PathVariable Integer page) {
-        List<SeanceDto> seancesDto = movieSeancesService.getPageOfSeances(page);
+        List<SeanceDto> seancesDto = movieSeancesService.getPageOfSeances(page - 1);
         log.info("'{}' seances were return.", seancesDto.size());
         return ResponseEntity.ok().body(seancesDto);
     }

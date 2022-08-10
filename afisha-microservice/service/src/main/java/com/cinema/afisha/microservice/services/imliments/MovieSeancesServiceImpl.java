@@ -73,7 +73,8 @@ public class MovieSeancesServiceImpl implements MovieSeancesService {
 
                 seancesDto.add(seanceDto);
             } catch (Exception e) {
-                log.error("Can't execute seance! " + e.getMessage());
+                log.error("Seance api exception was occurred! " + e.getMessage());
+                throw new MovieSeanceApiException("Seance api exception was occurred! " + e.getMessage());
             }
         });
         return seancesDto;
@@ -146,22 +147,6 @@ public class MovieSeancesServiceImpl implements MovieSeancesService {
         }
     }
 
-    @Override
-    public MovieSeanceDto updateSeance(MovieSeance movieSeance) {
-        if (movieSeancesRepository.existsById(movieSeance.getId())) {
-            try {
-                MovieSeance updatedMovieSeance = movieSeancesRepository.save(movieSeance);
-                log.info("Movie seance with id '{}' has been updated.", updatedMovieSeance.getId());
-                return MovieSeanceMapper.INSTANCE.mapToDto(updatedMovieSeance);
-            } catch (Exception e) {
-                log.error("Can't update movie seance! " + e.getMessage());
-                throw new MovieSeanceDeletingException("Can't update movie seance! " + e.getMessage());
-            }
-        } else {
-            log.warn("Movie seance with id '{}' doesn't exist!", movieSeance.getId());
-            throw new MovieSeanceNotFoundException(String.format("Movie seance with id '%d' doesn't exist!", movieSeance.getId()));
-        }
-    }
 
     @Override
     public Long deleteSeance(Long id) {

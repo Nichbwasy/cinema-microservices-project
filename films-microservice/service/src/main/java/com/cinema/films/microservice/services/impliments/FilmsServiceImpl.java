@@ -132,7 +132,7 @@ public class FilmsServiceImpl implements FilmsService {
     }
 
     @Override
-    public FilmImgResourceDto getFilmMetadata(Long id) {
+    public FilmImgResourceDto getFilmPosterMetadata(Long id) {
         if (filmsRepository.existsById(id)) {
             Film film = filmsRepository.getReferenceById(id);
             log.info("Film with id '{}' has been got.", id);
@@ -145,7 +145,7 @@ public class FilmsServiceImpl implements FilmsService {
 
     @Override
     public InputStream getFilmPoster(Long filmId) {
-        FilmImgResourceDto imgResourceDto = getFilmMetadata(filmId);
+        FilmImgResourceDto imgResourceDto = getFilmPosterMetadata(filmId);
         log.info("Resources for the film with id '{}' have been got.", filmId);
         return resourcesStorage.getFileByName(imgResourceDto.getFileName());
     }

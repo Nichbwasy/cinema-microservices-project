@@ -5,7 +5,6 @@ import com.cinema.films.microservice.domains.DirectorDto;
 import com.cinema.films.microservice.domains.FilmDto;
 import com.cinema.films.microservice.domains.FilmImgResourceDto;
 import com.cinema.films.microservice.domains.GenreDto;
-import com.cinema.films.microservice.models.Director;
 import com.cinema.films.microservice.models.Film;
 import com.cinema.films.microservice.services.DirectorsService;
 import com.cinema.films.microservice.services.FilmsService;
@@ -18,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.io.InputStream;
 import java.util.List;
 
@@ -59,7 +57,7 @@ public class FilmsController {
 
     @GetMapping("/{id}/poster/metadata")
     public ResponseEntity<FilmImgResourceDto> getFilmImgMetadata(@PathVariable Long id) {
-        FilmImgResourceDto imgResourceDto = filmsService.getFilmMetadata(id);
+        FilmImgResourceDto imgResourceDto = filmsService.getFilmPosterMetadata(id);
         log.info("Img resources for the film with id '{}' have been returned: {}", id, imgResourceDto);
         return ResponseEntity.ok().body(imgResourceDto);
     }

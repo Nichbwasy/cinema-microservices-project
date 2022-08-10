@@ -1,10 +1,8 @@
 package com.cinema.afisha.microservice.services.imliments;
 
 import com.cinema.afisha.microservice.domains.ReservationDto;
-import com.cinema.afisha.microservice.exceptions.services.reservations.ReservationAlreadyExistException;
-import com.cinema.afisha.microservice.exceptions.services.reservations.ReservationCreationException;
-import com.cinema.afisha.microservice.exceptions.services.reservations.ReservationNotFoundException;
-import com.cinema.afisha.microservice.exceptions.services.reservations.ReservationUpdatingException;
+import com.cinema.afisha.microservice.exceptions.services.reservations.*;
+import com.cinema.afisha.microservice.exceptions.services.seances.MovieSeanceNotFoundException;
 import com.cinema.afisha.microservice.exceptions.services.seances.sits.MovieSeanceSitNotFoundException;
 import com.cinema.afisha.microservice.models.MovieSeance;
 import com.cinema.afisha.microservice.models.MovieSeanceSit;
@@ -93,8 +91,8 @@ public class ReservationsServiceImpl implements ReservationsService {
                         throw new ReservationCreationException("Can't create reservation! " + e.getMessage());
                     }
                 } else {
-                    log.warn("Can't reserve sit '{}'! Sit is unavailable!", movieSeanceSit);
-                    throw new ReservationAlreadyExistException(String.format("Can't reserve sit '%s'! Sit is unavailable!", movieSeanceSit));
+                    log.warn("Can't reserve sit '{}'! Sit is unavailable to reserve!", movieSeanceSit);
+                    throw new ReservationAlreadyExistException(String.format("Can't reserve sit '%s'! Sit is unavailable to reserve!", movieSeanceSit));
                 }
             } else {
                 log.warn("Movie seance sit with id '{}' doesn't belong to the hall or not found!", reservation.getSitId());
@@ -102,7 +100,7 @@ public class ReservationsServiceImpl implements ReservationsService {
             }
         } else {
             log.warn("Movie seance with id '{}' not found!", reservation.getMovieSeanceId());
-            throw new MovieSeanceSitNotFoundException(String.format("Movie seance with id '%d' not found!", reservation.getMovieSeanceId()));
+            throw new MovieSeanceNotFoundException(String.format("Movie seance with id '%d' not found!", reservation.getMovieSeanceId()));
         }
     }
 
@@ -131,11 +129,11 @@ public class ReservationsServiceImpl implements ReservationsService {
                 }
             } else {
                 log.warn("Movie seance with id '{}' not found!", reservation.getMovieSeanceId());
-                throw new MovieSeanceSitNotFoundException(String.format("Movie seance with id '%d' not found!", reservation.getMovieSeanceId()));
+                throw new MovieSeanceNotFoundException(String.format("Movie seance with id '%d' not found!", reservation.getMovieSeanceId()));
             }
         } else {
             log.warn("Reservation with id '{}' not found!", reservation.getId());
-            throw new MovieSeanceSitNotFoundException(String.format("Reservation with id '%d' not found!", reservation.getId()));
+            throw new ReservationNotFoundException(String.format("Reservation with id '%d' not found!", reservation.getId()));
         }
     }
 
@@ -151,11 +149,11 @@ public class ReservationsServiceImpl implements ReservationsService {
                 return id;
             } catch (Exception e) {
                 log.error("Can't delete reservation! " + e.getMessage());
-                throw new ReservationUpdatingException("Can't delete reservation! " + e.getMessage());
+                throw new ReservationDeletingException("Can't delete reservation! " + e.getMessage());
             }
         } else {
             log.warn("Reservation with id '{}' not found!", id);
-            throw new MovieSeanceSitNotFoundException(String.format("Reservation with id '%d' not found!", id));
+            throw new ReservationNotFoundException(String.format("Reservation with id '%d' not found!", id));
         }
     }
 }

@@ -48,8 +48,8 @@ public class SitsTypesController {
         return ResponseEntity.ok(sitTypeDto.getId());
     }
 
-    @DeleteMapping
-    public ResponseEntity<Long> deleteSitType(@RequestParam Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> deleteSitType(@PathVariable Long id) {
         Long deletedId = sitsTypesService.deleteSitType(id);
         log.info("Sit type with id '{}' has been deleted successfully.", deletedId);
         return ResponseEntity.ok(deletedId);

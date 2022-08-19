@@ -1,6 +1,7 @@
 package com.cinema.cinemas.microservice.services.impliments;
 
 import com.cinema.cinemas.microservice.domains.SitTypeDto;
+import com.cinema.cinemas.microservice.exceptions.services.sits.SitNotFoundException;
 import com.cinema.cinemas.microservice.models.SitType;
 import com.cinema.cinemas.microservice.exceptions.services.sits.types.*;
 import com.cinema.cinemas.microservice.repositories.SitsTypesRepository;
@@ -90,7 +91,7 @@ public class SitsTypeServiceImpl implements SitsTypesService {
             }
         } else {
             log.warn("Can't delete sit type! Sit type with id '{}' not exists!", id);
-            throw new SitTypeAlreadyExistException(
+            throw new SitTypeNotFoundException(
                     String.format("Can't delete sit type! Sit type with id '%d' not exists!", id));
         }
     }

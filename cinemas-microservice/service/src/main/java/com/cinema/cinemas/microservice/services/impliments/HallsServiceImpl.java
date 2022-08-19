@@ -7,6 +7,7 @@ import com.cinema.cinemas.microservice.exceptions.services.halls.HallCreationExc
 import com.cinema.cinemas.microservice.exceptions.services.halls.HallDeletingException;
 import com.cinema.cinemas.microservice.exceptions.services.halls.HallNotFoundException;
 import com.cinema.cinemas.microservice.exceptions.services.halls.HallUpdatingException;
+import com.cinema.cinemas.microservice.exceptions.services.sits.types.SitTypeNotFoundException;
 import com.cinema.cinemas.microservice.models.Cinema;
 import com.cinema.cinemas.microservice.models.Hall;
 import com.cinema.cinemas.microservice.models.Sit;
@@ -75,18 +76,24 @@ public class HallsServiceImpl implements HallsService {
 
     @Override
     public HallDto createHall(Long sitTypeId, Hall hall) {
-        try {
-            hall = hallsRepository.save(hall);
-            SitType sitType = sitsTypesRepository.getReferenceById(sitTypeId);
-            List<Sit> sits = generateSits(hall, sitType);
-            hall.setSize(hall.getRows() * hall.getPlacesInRow());
-            hall.setSits(sits);
-            log.info("New hall with id '{}' has been created.", hall.getId());
-            return HallMapper.INSTANCE.mapToDto(hall);
-        } catch (Exception e) {
-            log.error("Error was occurred while creating a hall! " + e.getMessage());
-            throw new HallCreationException("Error was occurred while creating a hall! " + e.getMessage());
+        if (sitsTypesRepository.existsById(sitTypeId)) {
+            try {
+                SitType sitType = sitsTypesRepository.getReferenceById(sitTypeId);
+                hall = hallsRepository.save(hall);
+                List<Sit> sits = generateSits(hall, sitType);
+                hall.setSize(hall.getRows() * hall.getPlacesInRow());
+                hall.setSits(sits);
+                log.info("New hall with id '{}' has been created.", hall.getId());
+                return HallMapper.INSTANCE.mapToDto(hall);
+            } catch (Exception e) {
+                log.error("Error was occurred while creating a hall! " + e.getMessage());
+                throw new HallCreationException("Error was occurred while creating a hall! " + e.getMessage());
+            }
+        } else {
+            log.warn("Sit type with id '{}' not found!", sitTypeId);
+            throw new SitTypeNotFoundException(String.format("Sit type with id '%s' not found!", sitTypeId));
         }
+
     }
 
     @Override
@@ -112,8 +119,7 @@ public class HallsServiceImpl implements HallsService {
             Cinema cinema = cinemasRepository.getReferenceById(cinemaId);
             if (cinema.getHalls().stream().anyMatch(hall -> hall.getId().equals(hallId))) {
                 try {
-                    Hall removedHall = hallsRepository.getReferenceById(hallId);
-                    cinema.getHalls().remove(removedHall);
+                    hallsRepository.deleteById(hallId);
                     log.info("Hall with id '{}' has been deleted.", hallId);
                     return hallId;
                 } catch (Exception e) {

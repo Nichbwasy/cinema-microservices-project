@@ -3,10 +3,7 @@ package com.cinema.films.microservice.services.impliments;
 import com.cinema.common.utils.generators.StringGenerator;
 import com.cinema.films.microservice.domains.FilmDto;
 import com.cinema.films.microservice.domains.FilmImgResourceDto;
-import com.cinema.films.microservice.exceptions.services.films.FilmAlreadyExistException;
-import com.cinema.films.microservice.exceptions.services.films.FilmCreationException;
-import com.cinema.films.microservice.exceptions.services.films.FilmNotFoundException;
-import com.cinema.films.microservice.exceptions.services.films.FilmUpdatingException;
+import com.cinema.films.microservice.exceptions.services.films.*;
 import com.cinema.films.microservice.exceptions.services.films.img.FilmImgExtensionException;
 import com.cinema.films.microservice.exceptions.services.films.img.FilmImgSavingException;
 import com.cinema.films.microservice.exceptions.services.films.img.resources.FileImgWrongExtensionException;
@@ -83,7 +80,7 @@ public class FilmsServiceImpl implements FilmsService {
     }
 
     @Override
-    public FilmDto saveFilm(@Valid Film film, MultipartFile imgFile) {
+    public FilmDto saveFilm(Film film, MultipartFile imgFile) {
         if (!filmsRepository.existsByName(film.getName())) {
             try {
                 FilmImgResource filmImgResource = saveImg(imgFile);
@@ -102,7 +99,7 @@ public class FilmsServiceImpl implements FilmsService {
     }
 
     @Override
-    public FilmDto updateFilm(@Valid Film film, MultipartFile imgFile) {
+    public FilmDto updateFilm(Film film, MultipartFile imgFile) {
         if (filmsRepository.existsById(film.getId())) {
             if (!filmsRepository.existsByName(film.getName())) {
                 try {
@@ -153,19 +150,25 @@ public class FilmsServiceImpl implements FilmsService {
     @Override
     public Long deleteFilm(Long id) {
         if (filmsRepository.existsById(id)) {
-            Film film = filmsRepository.getReferenceById(id);
-            FilmImgResource resource = film.getImgResource();
-            resourcesStorage.deleteFileByName(resource.getFileName());
-            log.info("Img for the film with id '{}' has been deleted.", id);
-            filmImgResourcesRepository.delete(resource);
-            log.info("Img resources for the film with id '{}' has been deleted.", id);
-            filmsRepository.delete(film);
-            log.info("Film with id '{}' has been deleted.", id);
-            return id;
+            try {
+                Film film = filmsRepository.getReferenceById(id);
+                FilmImgResource resource = film.getImgResource();
+                resourcesStorage.deleteFileByName(resource.getFileName());
+                log.info("Img for the film with id '{}' has been deleted.", id);
+                filmImgResourcesRepository.delete(resource);
+                log.info("Img resources for the film with id '{}' has been deleted.", id);
+                filmsRepository.delete(film);
+                log.info("Film with id '{}' has been deleted.", id);
+                return id;
+            } catch (Exception e) {
+                log.error("Can't delete a film! " + e.getMessage());
+                throw new FilmDeletingException("Can't delete a film! " + e.getMessage());
+            }
         } else {
             log.warn("Film with id '{}' not found!", id);
             throw new FilmNotFoundException(String.format("Film with id '%d' not found!", id));
-        }    }
+        }
+    }
 
     private FilmImgResource saveImg(MultipartFile file) {
         if (fileExtensionCheck(file)) {

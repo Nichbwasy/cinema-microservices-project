@@ -18,7 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 
 
-public class ControllersTestConfiguration {
+public class CinemasControllersTestConfiguration {
 
     @Bean
     public CinemasService cinemasService() {

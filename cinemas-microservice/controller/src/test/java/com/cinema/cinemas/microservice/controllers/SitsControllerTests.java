@@ -1,6 +1,6 @@
 package com.cinema.cinemas.microservice.controllers;
 
-import com.cinema.cinemas.microservice.controllers.configs.ControllersTestConfiguration;
+import com.cinema.cinemas.microservice.controllers.configs.CinemasControllersTestConfiguration;
 import com.cinema.cinemas.microservice.domains.SitDto;
 import com.cinema.cinemas.microservice.domains.SitTypeDto;
 import com.cinema.cinemas.microservice.exceptions.services.sits.SitCreationException;
@@ -9,7 +9,6 @@ import com.cinema.cinemas.microservice.exceptions.services.sits.SitNotFoundExcep
 import com.cinema.cinemas.microservice.exceptions.services.sits.SitUpdatingException;
 import com.cinema.cinemas.microservice.models.Sit;
 import com.cinema.cinemas.microservice.models.SitType;
-import com.cinema.cinemas.microservice.repositories.SitsRepository;
 import com.cinema.cinemas.microservice.services.SitsService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = {SitsController.class})
-@Import(ControllersTestConfiguration.class)
+@Import(CinemasControllersTestConfiguration.class)
 @AutoConfigureMockMvc( addFilters = false ) // disable security
 public class SitsControllerTests {
 

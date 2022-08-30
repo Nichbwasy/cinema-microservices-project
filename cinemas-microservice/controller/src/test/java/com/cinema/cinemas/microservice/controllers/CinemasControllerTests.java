@@ -1,6 +1,6 @@
 package com.cinema.cinemas.microservice.controllers;
 
-import com.cinema.cinemas.microservice.controllers.configs.ControllersTestConfiguration;
+import com.cinema.cinemas.microservice.controllers.configs.CinemasControllersTestConfiguration;
 import com.cinema.cinemas.microservice.domains.CinemaDto;
 import com.cinema.cinemas.microservice.domains.HallDto;
 import com.cinema.cinemas.microservice.domains.SitDto;
@@ -36,7 +36,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = {CinemaController.class})
-@Import(ControllersTestConfiguration.class)
+@Import(CinemasControllersTestConfiguration.class)
 @AutoConfigureMockMvc( addFilters = false ) // disable security
 public class CinemasControllerTests {
 

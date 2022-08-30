@@ -1,6 +1,8 @@
 package com.cinema.afisha.microservice.controllers.exceptions;
 
 import com.cinema.afisha.microservice.exceptions.services.*;
+import com.cinema.cinemas.microservice.exceptions.services.halls.HallNotBelongCinemaException;
+import com.cinema.films.microservice.exceptions.services.films.FilmNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -43,7 +45,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = {EntityNotFoundException.class})
+    @ExceptionHandler(value = {EntityNotFoundException.class, HallNotBelongCinemaException.class, FilmNotFoundException.class})
     protected ResponseEntity<Object> notFoundException(Exception e, WebRequest request) {
         Map<String, Object> responseBody = new LinkedHashMap<>();
         log.error("Not found! " + e.getMessage());

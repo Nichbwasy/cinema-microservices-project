@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -33,16 +35,16 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+
 @SpringBootTest(classes = FilmsService.class)
 @Import(FilmsServicesTestConfiguration.class)
 @ExtendWith(SpringExtension.class)
 public class FilmsServiceTests {
 
-    private static Genre genre = new Genre(1L, "genre_name");
-    private static Director director = new Director(1L, "first_name", "last_name");
-    private static Film film = new Film(1L, "film_name", "description", 2001, null, null, null);
-    private static FilmImgResource filmImgResource = new FilmImgResource(1L, "IMG.png", "png", 100, 100, 10000L, new Date(), new Date());
-
+    private static final Genre genre = new Genre(1L, "genre_name");
+    private static final Director director = new Director(1L, "first_name", "last_name");
+    private static final Film film = new Film(1L, "film_name", "description", 2001, null, null, null);
+    private static final FilmImgResource filmImgResource = new FilmImgResource(1L, "IMG.png", "png", 100, 100, 10000L, new Date(), new Date());
 
     @Autowired
     private FilmsService filmsService;

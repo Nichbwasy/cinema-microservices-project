@@ -20,35 +20,35 @@ public class DirectorsController {
     private DirectorsService directorsService;
 
     @GetMapping
-    public ResponseEntity<List<DirectorDto>> getAllGenres() {
+    public ResponseEntity<List<DirectorDto>> getAllDirectors() {
         List<DirectorDto> directorsDto = directorsService.getAllDirectors();
         log.info("All '{}' directors has been returned.", directorsDto.size());
         return ResponseEntity.ok().body(directorsDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DirectorDto> getGenre(@PathVariable Long id) {
+    public ResponseEntity<DirectorDto> getDirector(@PathVariable Long id) {
         DirectorDto directorDto = directorsService.getDirector(id);
         log.info("Director with id '{}' has been returned.", id);
         return ResponseEntity.ok().body(directorDto);
     }
 
     @PostMapping
-    public ResponseEntity<Long> createGenre(@ModelAttribute @Valid Director genre) {
+    public ResponseEntity<Long> createDirector(@ModelAttribute @Valid Director genre) {
         DirectorDto directorDto = directorsService.createDirector(genre);
         log.info("New director has been created: {}", directorDto);
         return ResponseEntity.ok().body(directorDto.getId());
     }
 
     @PutMapping
-    public ResponseEntity<Long> updateGenre(@ModelAttribute @Valid Director genre) {
+    public ResponseEntity<Long> updateDirector(@ModelAttribute @Valid Director genre) {
         DirectorDto directorDto = directorsService.updateDirector(genre);
         log.info("Director with id '{}' has been updated: {}", directorDto.getId(), directorDto);
         return ResponseEntity.ok().body(directorDto.getId());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deleteGenre(@PathVariable Long id) {
+    public ResponseEntity<Long> deleteDirector(@PathVariable Long id) {
         Long deletedId = directorsService.deleteDirector(id);
         log.info("Director with id '{}' has been deleted.", deletedId);
         return ResponseEntity.ok().body(deletedId);

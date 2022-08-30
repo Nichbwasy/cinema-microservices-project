@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -35,16 +36,9 @@ public class MovieSeancesController {
     }
 
     @PostMapping
-    public ResponseEntity<MovieSeanceDto> createSeance(MovieSeance movieSeance) {
+    public ResponseEntity<MovieSeanceDto> createSeance(@Valid @ModelAttribute MovieSeance movieSeance) {
         MovieSeanceDto seanceDto = movieSeancesService.createSeance(movieSeance);
         log.info("New movie seance has been created: {}", seanceDto);
-        return ResponseEntity.ok().body(seanceDto);
-    }
-
-    @PutMapping
-    public ResponseEntity<MovieSeanceDto> updateSeance(MovieSeance movieSeance) {
-        MovieSeanceDto seanceDto = movieSeancesService.updateSeance(movieSeance);
-        log.info("Movie seance has been updated: {}", seanceDto);
         return ResponseEntity.ok().body(seanceDto);
     }
 

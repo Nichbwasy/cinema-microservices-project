@@ -12,9 +12,7 @@
         <module>server-microservice</module>
         <module>films-microservice</module>
         <module>common-utils</module>
-        <module>common-utils</module>
         <module>afisha-microservice</module>
-        <module>exception</module>
         <module>api-gateway</module>
     </modules>
     <packaging>pom</packaging>

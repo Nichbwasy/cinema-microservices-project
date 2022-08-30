@@ -16,8 +16,8 @@ public class ReservationsController {
     @Autowired
     private ReservationsService reservationsService;
 
-    @PostMapping
-    public ResponseEntity<ReservationDto> createReservation(ReservationFormDto reservation) {
+    @PostMapping("/reservation")
+    public ResponseEntity<ReservationDto> createReservation(@ModelAttribute ReservationFormDto reservation) {
         ReservationDto reservationDto = reservationsService.createReservation(reservation);
         log.info("New reservation has been created: {}", reservationDto);
         return ResponseEntity.ok().body(reservationDto);

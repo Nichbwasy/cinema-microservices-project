@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.InputStream;
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class FilmsController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createFilm(@ModelAttribute FilmFormDto filmFormDto, @ModelAttribute MultipartFile img) {
+    public ResponseEntity<Long> createFilm(@ModelAttribute @Valid FilmFormDto filmFormDto, @ModelAttribute MultipartFile img) {
         DirectorDto director = directorsService.getDirector(filmFormDto.getDirectorId());
         GenreDto genre = genresService.getGenre(filmFormDto.getGenreId());
 

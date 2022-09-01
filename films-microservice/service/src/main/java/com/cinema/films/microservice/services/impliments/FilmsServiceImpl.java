@@ -1,6 +1,6 @@
 package com.cinema.films.microservice.services.impliments;
 
-import com.cinema.common.utils.generators.StringGenerator;
+import com.cinema.common.utils.generators.strings.StringGenerator;
 import com.cinema.films.microservice.domains.FilmDto;
 import com.cinema.films.microservice.domains.FilmImgResourceDto;
 import com.cinema.films.microservice.exceptions.services.films.*;
@@ -28,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;

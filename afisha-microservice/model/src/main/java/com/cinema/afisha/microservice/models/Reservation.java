@@ -22,8 +22,8 @@ public class Reservation {
 
     @NotNull(message = "Email can't be null!")
     @Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-]+$", message = "Email is invalid!")
-    @Size(max = 255, message = "Email must contains lesser than 255 characters!")
-    @Column(name = "status", length = 255, nullable = false)
+    @Size(max = 128, message = "Email must contains lesser than 255 characters!")
+    @Column(name = "status", length = 128, nullable = false)
     private String reserverEmail;
 
     @NotNull(message = "Time od reservation can't be null!")

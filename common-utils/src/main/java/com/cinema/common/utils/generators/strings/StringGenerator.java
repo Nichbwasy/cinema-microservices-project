@@ -1,4 +1,4 @@
-package com.cinema.common.utils.generators;
+package com.cinema.common.utils.generators.strings;
 
 import java.nio.charset.Charset;
 import java.util.Random;

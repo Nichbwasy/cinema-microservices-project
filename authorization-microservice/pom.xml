@@ -19,6 +19,7 @@
         <module>exception</module>
         <module>service</module>
         <module>controller</module>
+        <module>run</module>
     </modules>
 
     <properties>

@@ -51,4 +51,10 @@ public class User {
 
     @Column(name = "enabled", nullable = false, columnDefinition="boolean default false")
     private Boolean enabled;
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }

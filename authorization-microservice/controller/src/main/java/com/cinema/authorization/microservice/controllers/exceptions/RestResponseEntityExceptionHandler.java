@@ -1,5 +1,6 @@
 package com.cinema.authorization.microservice.controllers.exceptions;
 
+import com.cinema.authorization.microservice.controllers.security.exceptions.JwtException;
 import com.cinema.authorization.microservice.exceptions.services.*;
 import com.cinema.authorization.microservice.exceptions.services.matching.PasswordsMatchException;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(value = {EntityAlreadyExistException.class, PasswordsMatchException.class})
+    @ExceptionHandler(value = {EntityAlreadyExistException.class, PasswordsMatchException.class, JwtException.class})
     protected ResponseEntity<Object> badRequestException(Exception e, WebRequest request) {
         Map<String, Object> responseBody = new LinkedHashMap<>();
         log.error("Bad request! " + e.getMessage());

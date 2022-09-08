@@ -16,9 +16,11 @@ import com.cinema.common.utils.authorizations.roles.UserRoles;
 import com.cinema.common.utils.generators.encoders.EncoderGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 
 @Slf4j
 @Service
@@ -38,16 +40,16 @@ public class RegistrationServiceImpl implements RegistrationService {
                 try {
                     //Encrypt password
                     form.setPassword(EncoderGenerator.getBCryptPasswordEncoder().encode(form.getPassword()));
-                    User user = RegisterFormDtoMapper.INSTANCE.mapToModel(form);
+                    User user = new User(form.getUsername(), form.getEmail(), form.getPassword());
                     Role role = rolesRepository.getByName(UserRoles.USER);
-                    user.getRoles().add(role);
+                    user.setRoles(Collections.singletonList(role));
                     user.setEnabled(true);
 
                     user = usersRepository.save(user);
                     log.info("New user '{}' has been registered.", user.getEmail());
                     return UserMapper.INSTANCE.mapToDto(user);
                 } catch (Exception e) {
-                    log.error("Exception was occurred while creation a nre user!");
+                    log.error("Exception was occurred while creation a new user!");
                     throw new UserCreationException("Exception was occurred while creation a nre user!");
                 }
             } else {

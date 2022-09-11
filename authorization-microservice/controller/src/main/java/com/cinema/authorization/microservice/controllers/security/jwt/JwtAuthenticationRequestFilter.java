@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
@@ -21,7 +22,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtRequestFilter extends GenericFilterBean {
+public class JwtAuthenticationRequestFilter extends GenericFilterBean {
 
     private final static String AUTHORIZATION_HEADER = "Authorization";
     private final static String BEARER = "Bearer ";
@@ -31,15 +32,27 @@ public class JwtRequestFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException, JwtException {
-        String token = getTokenFromRequest((HttpServletRequest) servletRequest);
-        if (jwtTokenProvider.validateAccessToken(token)) {
-            log.info("Token is valid.");
-            Claims claims = jwtTokenProvider.getAccessClaims(token);
-            JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
-            jwtInfoToken.setAuthenticated(true);
-            SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
+        String path = ((HttpServletRequest) servletRequest).getServletPath();
+        if (path.equals("/login") || path.equals("/register")) {
+            filterChain.doFilter(servletRequest, servletResponse);
+        } else {
+            String token = getTokenFromRequest((HttpServletRequest) servletRequest);
+            if (jwtTokenProvider.validateAccessToken(token)) {
+                log.info("Token is valid.");
+                UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(token);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                filterChain.doFilter(servletRequest, servletResponse);
+            } else {
+                log.error("Token validation exception!");
+                throw new JwtTokenValidationException("Token validation exception!");
+            }
         }
+    }
 
+    private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
+        Claims claims = jwtTokenProvider.getAccessClaims(token);
+        JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
+        return new UsernamePasswordAuthenticationToken(jwtInfoToken.getUsername(), null, jwtInfoToken.getAuthorities());
     }
 
     private String getTokenFromRequest(HttpServletRequest httpRequest) {

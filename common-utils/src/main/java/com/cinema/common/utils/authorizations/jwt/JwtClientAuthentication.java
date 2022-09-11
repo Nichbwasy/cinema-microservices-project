@@ -1,20 +1,17 @@
-package com.cinema.authorization.microservice.controllers.security.jwt;
+package com.cinema.common.utils.authorizations.jwt;
 
-import com.cinema.authorization.microservice.domain.RoleDto;
 import lombok.Data;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
-import java.util.Set;
 
 @Data
-public class JwtAuthentication implements Authentication {
+public class JwtClientAuthentication implements Authentication {
 
     private boolean authenticated;
     private String username;
-    private String email;
     private Collection<SimpleGrantedAuthority> authorities;
 
     @Override
@@ -49,6 +46,6 @@ public class JwtAuthentication implements Authentication {
 
     @Override
     public String getName() {
-        return email;
+        return username;
     }
 }

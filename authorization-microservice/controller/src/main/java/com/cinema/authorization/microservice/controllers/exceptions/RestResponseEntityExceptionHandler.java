@@ -3,6 +3,7 @@ package com.cinema.authorization.microservice.controllers.exceptions;
 import com.cinema.authorization.microservice.controllers.security.exceptions.JwtException;
 import com.cinema.authorization.microservice.exceptions.services.*;
 import com.cinema.authorization.microservice.exceptions.services.matching.PasswordsMatchException;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         log.error("Bad request! " + e.getMessage());
 
         responseBody.put("message", String.format("Bad request! %s", e.getMessage()));
+        responseBody.put("time", LocalDateTime.now());
+        return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {ExpiredJwtException.class})
+    protected ResponseEntity<Object> tokenExpiredException(Exception e, WebRequest request) {
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        log.error("Bad request! " + e.getMessage());
+
+        responseBody.put("message", String.format("Token was expired! %s", e.getMessage()));
         responseBody.put("time", LocalDateTime.now());
         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
     }

@@ -22,8 +22,8 @@ public class JwtTokenProvider {
 
     private final SecretKey ACCESS_SECRET;
     private final SecretKey REFRESH_SECRET;
-    private final static Integer ACCESS_TOKEN_LIFETIME = 30 * 60; //30min access token life time
-    private final static Integer REFRESH_TOKEN_LIFETIME = 30 * 24 * 60 * 60; //30d refresh token life time
+    private final static Integer ACCESS_TOKEN_LIFETIME = 24 * 30 * 60; //1 day access token life time
+    private final static Integer REFRESH_TOKEN_LIFETIME = 30 * 24 * 60 * 60; //1 month refresh token life time
 
     public JwtTokenProvider(@Value("${jwt.secret.key.access}") String jwtAccessSecret,
                             @Value("${jwt.secret.key.refresh}") String jwtRefreshSecret) {
@@ -75,15 +75,15 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException expEx) {
-            log.error("Token expired!", expEx);
+            log.error("Token expired! {}!", expEx.getMessage());
         } catch (UnsupportedJwtException unsEx) {
-            log.error("Unsupported JWT!", unsEx);
+            log.error("Unsupported JWT! {}!", unsEx.getMessage());
         } catch (MalformedJwtException mjEx) {
-            log.error("Malformed JWT!", mjEx);
+            log.error("Malformed JWT! {}!", mjEx.getMessage());
         } catch (SignatureException sEx) {
-            log.error("Invalid signature!", sEx);
+            log.error("Invalid signature! {}!", sEx.getMessage());
         } catch (Exception e) {
-            log.error("invalid token!", e);
+            log.error("invalid token! {}!", e.getMessage());
         }
         return false;
     }

@@ -1,21 +1,21 @@
-package com.cinema.authorization.microservice.controllers.security.jwt;
+package com.cinema.common.utils.authorizations.jwt;
 
-import com.cinema.authorization.microservice.domain.RoleDto;
 import io.jsonwebtoken.Claims;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @Slf4j
 @NoArgsConstructor
-public class JwtUtils {
-    public static JwtAuthentication generate(Claims claims) {
-        JwtAuthentication jwtInfoToken = new JwtAuthentication();
+public class JwtClientUtils {
+    public static JwtClientAuthentication generate(Claims claims) {
+        JwtClientAuthentication jwtInfoToken = new JwtClientAuthentication();
         jwtInfoToken.setAuthorities(getRoles(claims));
-        jwtInfoToken.setEmail(claims.get("email", String.class));
         jwtInfoToken.setUsername(claims.getSubject());
         jwtInfoToken.setAuthenticated(true);
         return jwtInfoToken;

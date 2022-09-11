@@ -1,8 +1,7 @@
 package com.cinema.authorization.microservice.controllers.security;
 
-import com.cinema.authorization.microservice.controllers.security.jwt.JwtRequestFilter;
+import com.cinema.authorization.microservice.controllers.security.jwt.JwtAuthenticationRequestFilter;
 import com.cinema.common.utils.authorizations.roles.UserRoles;
-import com.cinema.common.utils.generators.encoders.EncoderGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,26 +20,30 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
-    private final JwtRequestFilter jwtRequestFilter;
+    private final JwtAuthenticationRequestFilter jwtRequestFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .httpBasic().disable()
+                .authorizeRequests()
+                .antMatchers("/", "/login", "/register").permitAll()
+                .antMatchers("/api/test/admin").hasAnyAuthority(UserRoles.ADMIN)
+                .antMatchers("/api/test/user").hasAnyAuthority(UserRoles.USER, UserRoles.ADMIN)
+                .antMatchers("/api/test/all").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeHttpRequests()
-                .antMatchers("/", "/login", "/login/test/any", "/register").permitAll()
-                .antMatchers("/login/test/admin").hasRole(UserRoles.ADMIN)
-                .antMatchers("/login/test/user").hasRole(UserRoles.USER)
-                .anyRequest().permitAll()
+                .httpBasic()
                 .and()
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .and()
                 .build();
 
     }
-    
+
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();

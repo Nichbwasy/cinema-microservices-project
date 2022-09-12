@@ -1,5 +1,6 @@
 package com.cinema.authorization.microservice.controllers.security.jwt;
 
+import com.cinema.authorization.microservice.domain.RoleDto;
 import com.cinema.authorization.microservice.domain.UserDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -15,6 +16,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -35,11 +38,12 @@ public class JwtTokenProvider {
         LocalDateTime now = LocalDateTime.now();
         Instant timeInstant = now.plusSeconds(ACCESS_TOKEN_LIFETIME).atZone(ZoneId.systemDefault()).toInstant();
         Date expiration = Date.from(timeInstant);
+        Set<String> roles = user.getRoles().stream().map(RoleDto::getName).collect(Collectors.toSet());
         String accessToken = Jwts.builder()
                 .setSubject(user.getUsername())
                 .setExpiration(expiration)
                 .signWith(ACCESS_SECRET)
-                .claim("roles", user.getRoles())
+                .claim("roles", roles)
                 .claim("email", user.getEmail())
                 .compact();
         log.info("New authentication token for user '{}' has been generated.", user.getUsername());

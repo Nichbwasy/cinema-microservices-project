@@ -10,7 +10,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableEurekaClient
 @SpringBootApplication
 @EntityScan(basePackages = {"com.cinema.cinemas.microservice"})
-@ComponentScan(basePackages = {"com.cinema.cinemas.microservice"})
+@ComponentScan(basePackages = {
+        "com.cinema.cinemas.microservice",
+        "com.cinema.common.utils.authorizations.jwt"}
+        )
 @EnableJpaRepositories(basePackages = {"com.cinema.cinemas.microservice"})
 public class RunCinemasApplication {
 

@@ -13,7 +13,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(basePackages = {
         "com.cinema.afisha.microservice",
         "com.cinema.cinemas.microservice.clients",
-        "com.cinema.films.microservice.clients"
+        "com.cinema.films.microservice.clients",
+        "com.cinema.common.utils.authorizations.jwt"
 })
 @EnableJpaRepositories(basePackages = {"com.cinema.afisha.microservice"})
 public class RunAfishaApplication {

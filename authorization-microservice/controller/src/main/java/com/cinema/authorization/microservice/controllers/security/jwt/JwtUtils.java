@@ -23,8 +23,8 @@ public class JwtUtils {
 
     private static Collection<SimpleGrantedAuthority> getRoles(Claims claims) {
         Collection<SimpleGrantedAuthority> authorities = new HashSet<>();
-        List<LinkedHashMap<String, String>> roles = claims.get("roles", List.class);
-        roles.forEach(r -> authorities.add(new SimpleGrantedAuthority(r.get("name"))));
+        List<String> roles = claims.get("roles", List.class);
+        roles.forEach(r -> authorities.add(new SimpleGrantedAuthority(r)));
         return authorities;
     }
 }

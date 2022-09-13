@@ -1,0 +1,159 @@
+version: '3'
+
+services:
+  postgres-db:
+    image: postgres:14
+    container_name: postgres-db
+    volumes:
+      - ./postgres:/data/postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_MULTIPLE_DATABASES=cinemas,films,afisha,users
+      - PGDATA=/data/postgres
+    ports:
+      - 5432:5432
+    restart: always
+
+  pgadmin4:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - 5050:80
+    links:
+      - postgres-db
+
+  minio:
+    image: bitnami/minio:latest
+    container_name: minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+      - MINIO_DEFAULT_BUCKETS=audio:policy,testbucket
+    volumes:
+      - ./minio/data:/minio/data
+    restart: always
+
+  server-microservice:
+    container_name: server-microservice
+    build:
+      context: ./server-microservice
+      dockerfile: Dockerfile
+    ports:
+      - 8761:8761
+    restart: always
+    links:
+      - postgres-db
+
+  cinemas-microservice:
+    container_name: cinemas-microservice
+    build:
+      context: ./cinemas-microservice
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8080
+    restart:
+      always
+    environment:
+      - DB_URL=postgres-db
+      - DB_NAME=cinemas
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=root
+      - CINEMA_API_CLIENT_URL=cinemas-microservice
+      - MICROSERVICE_PORT=8080
+    links:
+      - postgres-db
+      - server-microservice
+
+  films-microservice:
+    container_name: films-microservice
+    build:
+      context: ./films-microservice
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8080
+    restart: always
+    environment:
+      - DB_URL=postgres-db
+      - DB_NAME=films
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=root
+      - FILMS_API_CLIENT_URL=films-microservice
+      - MINIO_ENDPOINT=minio
+      - MINIO_ACCESS_KEY=user
+      - MINIO_ACCESS_SECRET=password
+      - MINIO_BUCKET_NAME=cinema
+      - FILMS_PAGE_SIZE=6
+      - MICROSERVICE_PORT=8080
+    links:
+      - postgres-db
+      - server-microservice
+      - minio
+
+  afisha-microservice:
+    container_name: afisha-microservice
+    build:
+      context: ./afisha-microservice
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8080
+    restart: always
+    environment:
+      - DB_URL=postgres-db
+      - DB_NAME=afisha
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=root
+      - SEANCES_PAGE_SIZE=6
+      - CINEMA_API_CLIENT_URL=cinemas-microservice
+      - FILMS_API_CLIENT_URL=films-microservice
+      - MICROSERVICE_PORT=8080
+    links:
+      - postgres-db
+      - server-microservice
+
+  authorization-microservice:
+    container_name: authorization-microservice
+    build:
+      context: ./authorization-microservice
+      dockerfile: Dockerfile
+    ports:
+      - 8084:8080
+    restart: always
+    environment:
+      - DB_URL=postgres-db
+      - DB_NAME=users
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=root
+      - MICROSERVICE_PORT=8080
+    links:
+      - postgres-db
+      - server-microservice
+
+  api-gateway-microservice:
+    container_name: api-gateway-microservice
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - 9091:8080
+    restart: always
+    environment:
+      - MICROSERVICE_PORT=8080
+      - CINEMAS_MICROSERVICE_GATEWAY_URI=cinemas-microservice
+      - FILMS_MICROSERVICE_GATEWAY_URI=films-microservice
+      - AFISHA_MICROSERVICE_GATEWAY_URI=afisha-microservice
+      - AUTHORIZATION_MICROSERVICE_GATEWAY_URI=authorization-microservice
+      - EUREKA_SERVER_URL=server-microservice
+    links:
+      - postgres-db
+      - server-microservice
+      - cinemas-microservice
+      - films-microservice
+      - afisha-microservice

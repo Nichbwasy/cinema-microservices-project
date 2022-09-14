@@ -1,6 +1,7 @@
 package com.cinema.cinemas.microservice.controllers.configs;
 
 import com.cinema.cinemas.microservice.controllers.CinemaController;
+import com.cinema.cinemas.microservice.controllers.security.WebSecurityConfig;
 import com.cinema.cinemas.microservice.models.Cinema;
 import com.cinema.cinemas.microservice.repositories.CinemasRepository;
 import com.cinema.cinemas.microservice.repositories.HallsRepository;
@@ -39,6 +40,9 @@ public class CinemasControllersTestConfiguration {
     public SitsTypesService sitsTypesService() {
         return new SitsTypeServiceImpl();
     }
+
+    @MockBean
+    private WebSecurityConfig webSecurityConfig;
 
     @MockBean
     private CinemasRepository cinemasRepository;

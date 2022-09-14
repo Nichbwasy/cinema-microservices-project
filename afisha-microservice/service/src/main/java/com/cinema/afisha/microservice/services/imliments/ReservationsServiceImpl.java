@@ -13,7 +13,7 @@ import com.cinema.afisha.microservice.repositories.ReservationsRepository;
 import com.cinema.afisha.microservice.services.ReservationsService;
 import com.cinema.afisha.microservice.services.dto.ReservationFormDto;
 import com.cinema.afisha.microservice.services.mappers.ReservationMapper;
-import com.cinema.common.utils.contants.movie.seances.SitsStatuses;
+import com.cinema.common.utils.seances.SitsStatuses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

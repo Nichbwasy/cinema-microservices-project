@@ -63,8 +63,8 @@
         </dependency>
         <!-- COMMON-UTILS -->
         <dependency>
-            <groupId>com.cinema</groupId>
-            <artifactId>common-utils</artifactId>
+            <groupId>com.cinema.cinema-project.common</groupId>
+            <artifactId>utils</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

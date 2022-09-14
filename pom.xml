@@ -11,7 +11,7 @@
         <module>cinemas-microservice</module>
         <module>server-microservice</module>
         <module>films-microservice</module>
-        <module>common-utils</module>
+        <module>common</module>
         <module>afisha-microservice</module>
         <module>api-gateway</module>
         <module>authorization-microservice</module>

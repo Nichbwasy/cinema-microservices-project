@@ -4,6 +4,7 @@ import com.cinema.films.microservice.controllers.configs.FilmsControllersTestCon
 import com.cinema.films.microservice.domains.GenreDto;
 import com.cinema.films.microservice.exceptions.services.genres.*;
 import com.cinema.films.microservice.models.Genre;
+import com.cinema.films.microservice.services.FilmsService;
 import com.cinema.films.microservice.services.GenresService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,6 +38,12 @@ public class GenresControllerTests {
 
     @MockBean
     private GenresService genresService;
+
+    @MockBean
+    private FilmsController filmsController;
+
+    @MockBean
+    private FilmsService filmsService;
 
     @Test
     public void getAllGenresTest() throws Exception {

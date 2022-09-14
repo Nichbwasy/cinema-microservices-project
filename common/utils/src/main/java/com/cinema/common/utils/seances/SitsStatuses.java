@@ -1,4 +1,4 @@
-package com.cinema.common.utils.contants.movie.seances;
+package com.cinema.common.utils.seances;
 
 public class SitsStatuses {
     public final static String AVAILABLE = "AVAILABLE";

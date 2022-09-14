@@ -11,6 +11,7 @@ import com.cinema.films.microservice.models.Film;
 import com.cinema.films.microservice.models.FilmImgResource;
 import com.cinema.films.microservice.models.Genre;
 import com.cinema.films.microservice.services.DirectorsService;
+import com.cinema.films.microservice.services.FilmsService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -44,6 +45,12 @@ public class DirectorsControllerTests {
 
     @MockBean
     private DirectorsService directorsService;
+
+    @MockBean
+    private FilmsController filmsController;
+
+    @MockBean
+    private FilmsService filmsService;
 
     @Test
     public void getAllDirectorsTest() throws Exception {

@@ -158,8 +158,6 @@ public class MovieSeancesServiceTests {
         Assertions.assertEquals(movieSeanceDto.getHallId(), result.getMovieSeance().getHallId());
         Assertions.assertEquals(movieSeanceDto.getFilmId(), result.getMovieSeance().getFilmId());
         Assertions.assertEquals(movieSeanceDto.getPrice(), result.getMovieSeance().getPrice());
-        Assertions.assertEquals(movieSeanceDto.getBeginTime(), result.getMovieSeance().getBeginTime());
-        Assertions.assertEquals(movieSeanceDto.getEndTime(), result.getMovieSeance().getEndTime());
         Assertions.assertEquals(filmDto.getId(), result.getFilm().getId());
         Assertions.assertEquals(filmDto.getName(), result.getFilm().getName());
         Assertions.assertEquals(filmDto.getDescription(), result.getFilm().getDescription());

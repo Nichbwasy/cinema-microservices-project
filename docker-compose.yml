@@ -59,8 +59,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8081:8080
-    restart:
-      always
+    restart: always
     environment:
       - DB_URL=postgres-db
       - DB_NAME=cinemas
@@ -68,6 +67,7 @@ services:
       - DB_PASSWORD=root
       - CINEMA_API_CLIENT_URL=cinemas-microservice
       - MICROSERVICE_PORT=8080
+      - EUREKA_DEFAULT_ZONE=http://server-microservice:8761
     links:
       - postgres-db
       - server-microservice
@@ -92,6 +92,7 @@ services:
       - MINIO_BUCKET_NAME=cinema
       - FILMS_PAGE_SIZE=6
       - MICROSERVICE_PORT=8080
+      - EUREKA_DEFAULT_ZONE=http://server-microservice:8761
     links:
       - postgres-db
       - server-microservice
@@ -114,6 +115,7 @@ services:
       - CINEMA_API_CLIENT_URL=cinemas-microservice
       - FILMS_API_CLIENT_URL=films-microservice
       - MICROSERVICE_PORT=8080
+      - EUREKA_DEFAULT_ZONE=http://server-microservice:8761
     links:
       - postgres-db
       - server-microservice
@@ -132,6 +134,7 @@ services:
       - DB_USERNAME=postgres
       - DB_PASSWORD=root
       - MICROSERVICE_PORT=8080
+      - EUREKA_DEFAULT_ZONE=http://server-microservice:8761
     links:
       - postgres-db
       - server-microservice
@@ -142,15 +145,15 @@ services:
       context: ./api-gateway
       dockerfile: Dockerfile
     ports:
-      - 9091:8080
+      - 9191:8080
     restart: always
     environment:
       - MICROSERVICE_PORT=8080
-      - CINEMAS_MICROSERVICE_GATEWAY_URI=cinemas-microservice
-      - FILMS_MICROSERVICE_GATEWAY_URI=films-microservice
-      - AFISHA_MICROSERVICE_GATEWAY_URI=afisha-microservice
-      - AUTHORIZATION_MICROSERVICE_GATEWAY_URI=authorization-microservice
-      - EUREKA_SERVER_URL=server-microservice
+      - CINEMAS_MICROSERVICE_GATEWAY_URI=http://cinemas-microservice:8080
+      - FILMS_MICROSERVICE_GATEWAY_URI=http://films-microservice:8080
+      - AFISHA_MICROSERVICE_GATEWAY_URI=http://afisha-microservice:8080
+      - AUTHORIZATION_MICROSERVICE_GATEWAY_URI=http://authorization-microservice:8080
+      - EUREKA_DEFAULT_ZONE=server-microservice
     links:
       - postgres-db
       - server-microservice

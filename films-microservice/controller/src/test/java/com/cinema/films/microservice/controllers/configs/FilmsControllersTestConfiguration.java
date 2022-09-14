@@ -1,5 +1,7 @@
 package com.cinema.films.microservice.controllers.configs;
 
+import com.cinema.films.microservice.controllers.FilmsController;
+import com.cinema.films.microservice.controllers.security.WebSecurityConfig;
 import com.cinema.films.microservice.repositories.DirectorsRepository;
 import com.cinema.films.microservice.repositories.FilmImgResourcesRepository;
 import com.cinema.films.microservice.repositories.FilmsRepository;
@@ -32,6 +34,9 @@ public class FilmsControllersTestConfiguration {
     public FilmsService filmsService() {
         return new FilmsServiceImpl();
     }
+
+    @MockBean
+    private WebSecurityConfig webSecurityConfig;
 
     @MockBean
     private GenresRepository genresRepository;

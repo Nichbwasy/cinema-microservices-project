@@ -12,6 +12,7 @@ import com.cinema.authorization.microservice.services.RegistrationService;
 import com.cinema.authorization.microservice.services.dto.RegisterFormDto;
 import com.cinema.authorization.microservice.services.mappers.UserMapper;
 import com.cinema.authorization.microservice.services.mappers.RegisterFormDtoMapper;
+import com.cinema.common.utils.authorizations.providers.ProviderTypes;
 import com.cinema.common.utils.authorizations.roles.UserRoles;
 import com.cinema.common.utils.generators.encoders.EncoderGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     form.setPassword(EncoderGenerator.getBCryptPasswordEncoder().encode(form.getPassword()));
                     User user = new User(form.getUsername(), form.getEmail(), form.getPassword());
                     Role role = rolesRepository.getByName(UserRoles.USER);
+                    user.setProvider(ProviderTypes.LOCAL);
                     user.setRoles(Collections.singletonList(role));
                     user.setEnabled(true);
 

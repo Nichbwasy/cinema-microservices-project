@@ -8,6 +8,7 @@ import com.cinema.authorization.microservice.domain.UserDto;
 import com.cinema.authorization.microservice.exceptions.services.users.UserNotFoundException;
 import com.cinema.authorization.microservice.models.User;
 import com.cinema.authorization.microservice.services.UsersService;
+import com.cinema.authorization.microservice.services.dto.oauth2.GoogleOAuth2User;
 import io.jsonwebtoken.Claims;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,18 @@ public class JwtAuthenticationService {
     public JwtTokensResponse logInUser(@NonNull LogInFormDto logInForm) throws AuthException {
         UserDto user = usersService.getUserByUsername(logInForm.getUsername());
         if (usersService.checkUserPassword(logInForm.getUsername(), logInForm.getPassword())) {
+            String accessToken = jwtTokenProvider.generateAccessJwtToken(user);
+            String refreshToken = jwtTokenProvider.generateRefreshJwtToken(user);
+            return new JwtTokensResponse(accessToken, refreshToken);
+        } else {
+            log.warn("Wrong password!");
+            throw new AuthException("Wrong password!");
+        }
+    }
+
+    public JwtTokensResponse logInAuthenticatedUser(@NonNull UserDto userDto) throws AuthException {
+        if (usersService.existByEmail(userDto.getEmail())) {
+            UserDto user = usersService.getUserByEmail(userDto.getEmail());
             String accessToken = jwtTokenProvider.generateAccessJwtToken(user);
             String refreshToken = jwtTokenProvider.generateRefreshJwtToken(user);
             return new JwtTokensResponse(accessToken, refreshToken);

@@ -32,9 +32,8 @@ public class User {
     @Column(name = "email", unique = true, nullable = false, length = 255)
     private String email;
 
-    @NotNull(message = "Password is mandatory!")
     @Size(min = 4, max = 64, message = "Password size must be in between 4 and 64 characters!")
-    @Column(name = "password", unique = true, nullable = false, length = 64)
+    @Column(name = "password", length = 64)
     private String password;
 
     @Enumerated(EnumType.STRING)

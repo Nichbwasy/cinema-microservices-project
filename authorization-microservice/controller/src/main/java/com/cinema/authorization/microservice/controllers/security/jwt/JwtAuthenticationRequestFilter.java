@@ -18,6 +18,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -26,6 +31,8 @@ public class JwtAuthenticationRequestFilter extends GenericFilterBean {
 
     private final static String AUTHORIZATION_HEADER = "Authorization";
     private final static String BEARER = "Bearer ";
+    private final static List<String> IGNORED_PATHS = Arrays.asList("/", "/login", "/register", "/login/oauth2/**", "/favicon.ico", "/error");
+
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -33,7 +40,7 @@ public class JwtAuthenticationRequestFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException, JwtException {
         String path = ((HttpServletRequest) servletRequest).getServletPath();
-        if (path.equals("/login") || path.equals("/register")) {
+        if (checkIgnores(path, IGNORED_PATHS)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             String token = getTokenFromRequest((HttpServletRequest) servletRequest);
@@ -68,5 +75,14 @@ public class JwtAuthenticationRequestFilter extends GenericFilterBean {
             log.error("Token not found!");
             throw new JwtTokenNotFoundException("Token not found!");
         }
+    }
+
+    private Boolean checkIgnores(String url, List<String> ignorePaths) {
+        return ignorePaths.stream().anyMatch(
+                path -> {
+                    if (path.contains("/**")) return url.startsWith(path.replace("/**", ""));
+                    else return url.equals(path);
+                }
+        );
     }
 }

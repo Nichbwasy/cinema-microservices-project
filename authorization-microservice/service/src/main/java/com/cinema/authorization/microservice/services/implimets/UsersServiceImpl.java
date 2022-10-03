@@ -46,7 +46,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public UserDto getUserByEmail(String email) {
         if (usersRepository.existsByEmail(email)) {
-            User user = usersRepository.getByUsername(email);
+            User user = usersRepository.getByEmail(email);
             log.info("User with email '{}' has been found.", email);
             return UserMapper.INSTANCE.mapToDto(user);
         } else {

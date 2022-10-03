@@ -1,9 +1,6 @@
 package com.cinema.authorization.microservice.models;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,6 +10,7 @@ import javax.validation.constraints.Size;
 @Getter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "roles")
 public class Role {
     @Id

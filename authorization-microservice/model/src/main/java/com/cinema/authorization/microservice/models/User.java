@@ -1,10 +1,7 @@
 package com.cinema.authorization.microservice.models;
 
 import com.cinema.common.utils.authorizations.providers.ProviderTypes;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,6 +12,7 @@ import java.util.Collection;
 @Getter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "users")
 public class User {
 
